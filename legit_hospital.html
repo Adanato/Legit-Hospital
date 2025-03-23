@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Hypothetical Healthcare Form (HIPAA Violation Demo)</title>
+  
+<!-- Meta Pixel Code -->
+<script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '537830378845512');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=537830378845512&ev=PageView&noscript=1"
+    /></noscript>
+    <!-- End Meta Pixel Code -->
+
+  <style>
+    body { font-family: sans-serif; margin: 2em; background: #f8f8f8; }
+    form { background: #fff; padding: 1em; max-width: 400px; border-radius: 4px; }
+    label { display: block; margin-bottom: 0.5em; }
+    input, textarea {
+      width: 100%; padding: 0.6em; margin-top: 0.2em; box-sizing: border-box;
+    }
+    button { margin-top: 1em; padding: 0.6em 1em; cursor: pointer; }
+  </style>
+</head>
+<body>
+
+  <h1>Hypothetical Healthcare Visit Form</h1>
+  <p><strong>Disclaimer:</strong> This is a demo showing how a site could improperly send
+     health data to Facebook via Meta Pixel—potentially violating HIPAA if done by
+     a covered entity without the appropriate agreements or patient consent.</p>
+
+  <!-- A form that collects potentially sensitive health data -->
+  <form action="#" method="post" onsubmit="sendPHIToMeta(); return false;">
+    <label>
+      Patient Name:
+      <input type="text" name="patientName" id="patientName" required>
+    </label>
+    <label>
+      Date of Birth:
+      <input type="date" name="dob" id="dob" required>
+    </label>
+    <label>
+      Reason for Visit (Symptoms or Diagnoses):
+      <textarea name="symptoms" id="symptoms" required></textarea>
+    </label>
+    <button type="submit">Submit</button>
+  </form>
+
+  <script>
+    /*
+      This function demonstrates how a developer might INTENTIONALLY or ACCIDENTALLY
+      attach private health info to a Meta Pixel event. This is exactly what The Markup
+      found in some hospital websites: the Pixel was embedded on patient portals or
+      appointment pages and transmitted PHI like diagnoses, medications, or appointment
+      details to Facebook.
+    */
+    function sendPHIToMeta() {
+      // Gather "PHI" from form fields:
+      const patientName = document.getElementById('patientName').value;
+      const dob = document.getElementById('dob').value;
+      const symptoms = document.getElementById('symptoms').value;
+
+      // A BAD PRACTICE: passing PHI to Facebook:
+      fbq('track', 'SubmitHealthInfo', {
+        patient_name: patientName,
+        date_of_birth: dob,
+        symptoms_or_diagnoses: symptoms
+      });
+
+      alert('Form submitted! (In a real scenario, PHI would now be sent to Facebook—potential HIPAA violation!)');
+    }
+  </script>
+
+</body>
+</html>
