@@ -2,56 +2,89 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Hypothetical Healthcare Form (HIPAA Violation Demo)</title>
-    <script>
-      !function(f,b,e,v,n,t,s)
-      {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-      n.queue=[];t=b.createElement(e);t.async=!0;
-      t.src=v;s=b.getElementsByTagName(e)[0];
-      s.parentNode.insertBefore(t,s)}(window, document,'script',
-      'https://connect.facebook.net/en_US/fbevents.js');
-      fbq('init', '537830378845512');
-      fbq('track', 'PageView');
+  <title>Legit-Hospital Healthcare Form (HIPAA Violation Demo)</title>
 
-      function trackScheduleWithPHI() {
-        const patientName = document.getElementById('patientName').value;
-        const dob = document.getElementById('dob').value;
-        const symptoms = document.getElementById('symptoms').value;
-  
-        // "Schedule" is the event name, but it still attaches PHI as parameters:
-        fbq('track', 'Schedule', {
-          patient_name: patientName,
-          date_of_birth: dob,
-          symptoms_or_diagnoses: symptoms
-        });
-      }
-    </script>
-    <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=537830378845512&ev=PageView&noscript=1"
-    /></noscript>
+  <script>
+    // Base Meta Pixel Setup
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
 
+    fbq('init', '537830378845512');
+    fbq('track', 'PageView');
+
+    // hippa violater function that sends all these form fields to Facebook
+    function trackScheduleWithPHI() {
+      const patientName = document.getElementById('patientName').value;
+      const dob = document.getElementById('dob').value;
+      const symptoms = document.getElementById('symptoms').value;
+      const phone = document.getElementById('phone').value;
+      const email = document.getElementById('email').value;
+      const insuranceProvider = document.getElementById('insuranceProvider').value;
+      const insuranceID = document.getElementById('insuranceID').value;
+      const medications = document.getElementById('medications').value;
+
+      // sending all fields as parameters to the "Schedule" event
+      fbq('track', 'Schedule', {
+        patient_name: patientName,
+        date_of_birth: dob,
+        symptoms_or_diagnoses: symptoms,
+        phone_number: phone,
+        email_address: email,
+        insurance_provider: insuranceProvider,
+        insurance_id: insuranceID,
+        current_medications: medications
+      });
+    }
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=537830378845512&ev=PageView&noscript=1" />
+  </noscript>
 
   <style>
-    body { font-family: sans-serif; margin: 2em; background: #f8f8f8; }
-    form { background: #fff; padding: 1em; max-width: 400px; border-radius: 4px; }
-    label { display: block; margin-bottom: 0.5em; }
-    input, textarea {
-      width: 100%; padding: 0.6em; margin-top: 0.2em; box-sizing: border-box;
+    body {
+      font-family: sans-serif;
+      margin: 2em;
+      background: #f8f8f8;
     }
-    button { margin-top: 1em; padding: 0.6em 1em; cursor: pointer; }
+    form {
+      background: #fff;
+      padding: 1em;
+      max-width: 400px;
+      border-radius: 4px;
+    }
+    label {
+      display: block;
+      margin-bottom: 0.5em;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 0.6em;
+      margin-top: 0.2em;
+      box-sizing: border-box;
+    }
+    button {
+      margin-top: 1em;
+      padding: 0.6em 1em;
+      cursor: pointer;
+    }
   </style>
 </head>
 <body>
 
   <h1>Hypothetical Healthcare Visit Form</h1>
-  <p><strong>Disclaimer:</strong> This is a demo showing how a site could send
-     health data to Facebook via Meta Pixel—potentially violating HIPAA if done by
-     a covered entity without a BAA and patient consent.</p>
+  <p><strong>Disclaimer:</strong> This demo shows how <em>sensitive patient data</em>
+  (PHI) could be transmitted to Facebook via the Meta Pixel. Doing this in real life 
+  could violate HIPAA and other privacy regulations if you're a covered entity.</p>
 
-  <!-- A form that collects potentially sensitive health data -->
-  <form action="#" method="post" onsubmit="trackScheduleWithPHI(); alert('Form submitted, PHI sent!'); return false;">
+  <form action="#" method="post"
+        onsubmit="trackScheduleWithPHI(); alert('Form submitted, PHI sent!'); return false;">
     <label>
       Patient Name:
       <input type="text" name="patientName" id="patientName" required>
@@ -63,6 +96,26 @@
     <label>
       Reason for Visit (Symptoms or Diagnoses):
       <textarea name="symptoms" id="symptoms" required></textarea>
+    </label>
+    <label>
+      Phone Number:
+      <input type="tel" name="phone" id="phone" required>
+    </label>
+    <label>
+      Email Address:
+      <input type="email" name="email" id="email" required>
+    </label>
+    <label>
+      Insurance Provider:
+      <input type="text" name="insuranceProvider" id="insuranceProvider">
+    </label>
+    <label>
+      Insurance ID:
+      <input type="text" name="insuranceID" id="insuranceID">
+    </label>
+    <label>
+      Current Medications:
+      <textarea name="medications" id="medications"></textarea>
     </label>
     <button type="submit">Submit</button>
   </form>
