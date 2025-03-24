@@ -14,6 +14,19 @@
       'https://connect.facebook.net/en_US/fbevents.js');
       fbq('init', '537830378845512');
       fbq('track', 'PageView');
+
+      function trackScheduleWithPHI() {
+        const patientName = document.getElementById('patientName').value;
+        const dob = document.getElementById('dob').value;
+        const symptoms = document.getElementById('symptoms').value;
+  
+        // "Schedule" is the event name, but it still attaches PHI as parameters:
+        fbq('track', 'Schedule', {
+          patient_name: patientName,
+          date_of_birth: dob,
+          symptoms_or_diagnoses: symptoms
+        });
+      }
     </script>
     <noscript><img height="1" width="1" style="display:none"
     src="https://www.facebook.com/tr?id=537830378845512&ev=PageView&noscript=1"
@@ -33,12 +46,12 @@
 <body>
 
   <h1>Hypothetical Healthcare Visit Form</h1>
-  <p><strong>Disclaimer:</strong> This is a demo showing how a site could improperly send
+  <p><strong>Disclaimer:</strong> This is a demo showing how a site could send
      health data to Facebook via Meta Pixel—potentially violating HIPAA if done by
-     a covered entity without the appropriate agreements or patient consent.</p>
+     a covered entity without a BAA and patient consent.</p>
 
   <!-- A form that collects potentially sensitive health data -->
-  <form action="#" method="post" onsubmit="sendPHIToMeta(); return false;">
+  <form action="#" method="post" onsubmit="trackScheduleWithPHI(); alert('Form submitted, PHI sent!'); return false;">
     <label>
       Patient Name:
       <input type="text" name="patientName" id="patientName" required>
@@ -53,31 +66,6 @@
     </label>
     <button type="submit">Submit</button>
   </form>
-
-  <script>
-    /*
-      This function demonstrates how a developer might INTENTIONALLY or ACCIDENTALLY
-      attach private health info to a Meta Pixel event. This is exactly what The Markup
-      found in some hospital websites: the Pixel was embedded on patient portals or
-      appointment pages and transmitted PHI like diagnoses, medications, or appointment
-      details to Facebook.
-    */
-    function sendPHIToMeta() {
-      // Gather "PHI" from form fields:
-      const patientName = document.getElementById('patientName').value;
-      const dob = document.getElementById('dob').value;
-      const symptoms = document.getElementById('symptoms').value;
-
-      // A BAD PRACTICE: passing PHI to Facebook:
-      fbq('track', 'SubmitHealthInfo', {
-        patient_name: patientName,
-        date_of_birth: dob,
-        symptoms_or_diagnoses: symptoms
-      });
-
-      alert('Form submitted! (In a real scenario, PHI would now be sent to Facebook—potential HIPAA violation!)');
-    }
-  </script>
 
 </body>
 </html>
